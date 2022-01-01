@@ -126,12 +126,14 @@ class Boiler:
                     self.config['current_temperature_topic'],
                     '0' if self.attributes['temperature'] == 'None' else self.attributes['temperature'],
                     qos=0)
+                logger.info("Boiler created / updated : %s %s %s", self.name, self.id, self.attributes['temperature'])
             if 'setpoint' in self.attributes:
                 #                self.mqtt.mqtt_client.publish(self.config['temperature_command_topic'], self.attributes['setpoint'], qos=0)
                 self.mqtt.mqtt_client.publish(
                     self.config['temperature_state_topic'],
                     '10' if self.attributes['setpoint'] == 'None' else self.attributes['setpoint'],
                     qos=0)
+                logger.info("Boiler created / updated : %s %s %s", self.name, self.id, self.attributes['setpoint'])
 #            if 'hvacMode' in self.attributes:
 #                self.mqtt.mqtt_client.publish(self.config['mode_state_topic'], "heat" if self.attributes['hvacMode'] == "NORMAL" else "off", qos=0)
 #            if 'authorization' in self.attributes:
@@ -145,13 +147,15 @@ class Boiler:
                     self.config['hold_state_topic'],
                     self.attributes['thermicLevel'],
                     qos=0)
+                logger.info("Boiler created / updated : %s %s %s", self.name, self.id, self.attributes['thermicLevel'])
             if 'outTemperature' in self.attributes:
                 self.mqtt.mqtt_client.publish(
                     self.config['state_topic'],
                     self.attributes['outTemperature'],
                     qos=0)
+                logger.info("Boiler created / updated : %s %s %s", self.name, self.id, self.attributes['outTemperature'])
 
-        logger.info("Boiler created / updated : %s %s", self.name, self.id)
+        # logger.info("Boiler created / updated : %s %s %s", self.name, self.id, self.current_position)
 
     async def put_temperature(tydom_client, device_id, boiler_id, set_setpoint):
         logger.info("%s %s %s", boiler_id, 'set_setpoint', set_setpoint)
