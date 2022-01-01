@@ -151,7 +151,7 @@ class Boiler:
                     self.attributes['outTemperature'],
                     qos=0)
 
-        logger.info("Boiler created / updated : %s %s current temperature: %s setpoint: %s mode: %s", self.name, self.id, self.attributes['temperature'], self.id, self.attributes['setpoint'], self.attributes['thermicLevel'])
+        logger.info("Boiler created / updated : %s %s", self.name, self.id)
 
     async def put_temperature(tydom_client, device_id, boiler_id, set_setpoint):
         logger.info("%s %s %s", boiler_id, 'set_setpoint', set_setpoint)
