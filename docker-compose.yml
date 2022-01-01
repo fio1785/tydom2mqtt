@@ -1,4 +1,4 @@
-# file to use for local testing with docker-compose and an .env file
+# file to use for local testing with docker-compose and an *.env file
 
 version: '3'
 
