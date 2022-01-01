@@ -14,6 +14,7 @@ from alarm_control_panel import Alarm
 from light import Light
 from boiler import Boiler
 from switch import Switch
+from others import Others
 from logger import logger
 import logging
 
@@ -141,7 +142,7 @@ class MQTT_Hassio():
 
             await Cover.put_position(tydom_client=self.tydom, device_id=device_id, cover_id=endpoint_id, position=str(value))
 
-        elif 'set_levelCmd' in str(topic):
+        elif 'set_levelCmd' in str(topic) and ('light' in str(topic)):
             logger.info('Incoming MQTT set_levelCmd request : %s %s', topic, payload)
             value = str(payload).strip('b').strip("'")
 
@@ -153,7 +154,7 @@ class MQTT_Hassio():
             await Light.put_levelCmd(tydom_client=self.tydom, device_id=device_id, light_id=endpoint_id,
                                      levelCmd=str(value))
 
-        elif ('set_level' in str(topic)) and not ('set_levelCmd' in str(topic)):
+        elif ('set_level' in str(topic)) and not ('set_levelCmd' in str(topic)) and ('light' in str(topic)):
 
             logger.info(
                 'Incoming MQTT set_level request : %s %s',
@@ -166,6 +167,33 @@ class MQTT_Hassio():
             endpoint_id = (get_id.split("_"))[1]  # extract id from mqtt
 
             await Light.put_level(tydom_client=self.tydom, device_id=device_id, light_id=endpoint_id,
+                                  level=str(value))
+            
+        elif 'set_levelCmd' in str(topic) and ('others' in str(topic)):
+            logger.info('Incoming MQTT set_levelCmd request : %s %s', topic, payload)
+            value = str(payload).strip('b').strip("'")
+
+            get_id = (topic.split("/"))[2]  # extract ids from mqtt
+            device_id = (get_id.split("_"))[0]  # extract id from mqtt
+            endpoint_id = (get_id.split("_"))[1]  # extract id from mqtt
+
+            logger.info("%s %s %s", str(get_id), 'levelCmd', value)
+            await Others.put_levelCmd(tydom_client=self.tydom, device_id=device_id, others_id=endpoint_id,
+                                     levelCmd=str(value))
+
+        elif ('set_level' in str(topic)) and not ('set_levelCmd' in str(topic)) and ('others' in str(topic)):
+
+            logger.info(
+                'Incoming MQTT set_level request : %s %s',
+                topic,
+                json.loads(payload))
+            value = json.loads(payload)
+            # logger.debug(value)
+            get_id = (topic.split("/"))[2]  # extract ids from mqtt
+            device_id = (get_id.split("_"))[0]  # extract id from mqtt
+            endpoint_id = (get_id.split("_"))[1]  # extract id from mqtt
+
+            await Others.put_level(tydom_client=self.tydom, device_id=device_id, others_id=endpoint_id,
                                   level=str(value))
 
         elif ('set_alarm_state' in str(topic)) and not ('homeassistant' in str(topic)):

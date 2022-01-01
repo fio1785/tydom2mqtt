@@ -4,6 +4,7 @@ from boiler import Boiler
 from alarm_control_panel import Alarm
 from sensors import sensor
 from switch import Switch
+from others import Others
 
 
 from http.server import BaseHTTPRequestHandler
@@ -184,6 +185,9 @@ device_conso_unit_of_measurement = {
     'energyTotIndexWatt': 'Wh'}
 device_conso_keywords = device_conso_classes.keys()
 
+deviceOthersKeywords = ['level','onFavPos','thermicDefect']
+deviceOthersDetailsKeywords = ['onFavPos','thermicDefect']
+
 # Device dict for parsing
 device_name = dict()
 device_endpoint = dict()
@@ -353,7 +357,7 @@ class TydomMessageHandler():
                 "_" + str(i["id_device"])
 
             if i["last_usage"] == 'shutter' or i["last_usage"] == 'klineShutter' or i["last_usage"] == 'light' or i["last_usage"] == 'window' or i["last_usage"] == 'windowFrench' or i["last_usage"] == 'belmDoor' or i[
-                    "last_usage"] == 'klineDoor' or i["last_usage"] == 'klineWindowFrench' or i["last_usage"] == 'klineWindowSliding' or i["last_usage"] == 'garage_door' or i["last_usage"] == 'gate':
+                    "last_usage"] == 'klineDoor' or i["last_usage"] == 'klineWindowFrench' or i["last_usage"] == 'klineWindowSliding' or i["last_usage"] == 'garage_door' or i["last_usage"] == 'gate' or i["last_usage"] == 'others':
 
                 # logger.debug('%s %s'.format(i["id_endpoint"],i["name"]))
                 # device_name[i["id_endpoint"]] = i["name"]
@@ -395,6 +399,8 @@ class TydomMessageHandler():
                         attr_gate = {}
                         attr_boiler = {}
                         attr_light_details = {}
+                        attr_others = {}
+                        attr_others_details = {}
                         device_id = i["id"]
                         endpoint_id = endpoint["id"]
                         unique_id = str(endpoint_id) + "_" + str(device_id)
@@ -435,6 +441,16 @@ class TydomMessageHandler():
                                     attr_light['name'] = print_id
                                     attr_light['device_type'] = 'light'
                                     attr_light[elementName] = elementValue
+                                    
+                            if type_of_id == 'others':
+                                if elementName in deviceOthersKeywords and elementValidity == 'upToDate':  # NEW METHOD
+                                    attr_others['device_id'] = device_id
+                                    attr_others['endpoint_id'] = endpoint_id
+                                    attr_others['id'] = str(device_id) + '_' + str(endpoint_id)
+                                    attr_others['others_name'] = print_id
+                                    attr_others['name'] = print_id
+                                    attr_others['device_type'] = 'others'
+                                    attr_others[elementName] = elementValue
 
                             if type_of_id == 'shutter' or type_of_id == 'klineShutter':
                                 if elementName in deviceCoverKeywords and elementValidity == 'upToDate':  # NEW METHOD
@@ -567,6 +583,12 @@ class TydomMessageHandler():
                             mqtt=self.mqtt_client)  # NEW METHOD
                         # new_cover = Cover(id=endpoint_id,name=print_id, current_position=elementValue, attributes=i, mqtt=self.mqtt_client)
                         await new_light.update()
+                    elif 'device_type' in attr_others and attr_others['device_type'] == 'others':
+                        # print(attr_cover)
+                        new_others = "others_tydom_"+str(device_id)
+                        new_others = Others(tydom_attributes=attr_others, mqtt=self.mqtt_client) #NEW METHOD
+                        # new_cover = Cover(id=endpoint_id,name=print_id, current_position=elementValue, attributes=i, mqtt=self.mqtt_client)
+                        await new_others.update()
                     elif 'device_type' in attr_boiler and attr_boiler['device_type'] == 'climate':
                         # logger.debug(attr_boiler)
                         new_boiler = "boiler_tydom_" + str(device_id)
