@@ -6,6 +6,7 @@ services:
   tydom2mqtt:
     build: ./
     container_name: tydom2mqtt
+    restart: always
     environment:
       - TYDOM_MAC=${TYDOM_MAC}
       - TYDOM_PASSWORD=${TYDOM_PASSWORD}
