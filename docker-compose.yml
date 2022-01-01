@@ -4,3 +4,6 @@ services:
   tydom2mqtt:
     build: ./
     container_name: tydom2mqtt
+    environment:
+        - TYDOM_ALARM_PIN = None
+        
