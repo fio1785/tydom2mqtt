@@ -98,6 +98,7 @@ class MQTT_Hassio():
             logger.info('Incoming MQTT scenarii request : %s %s', topic, payload)
             await self.tydom.get_scenarii()
         elif (topic == "homeassistant/status" and payload.decode() == 'online'):
+            logger.info('Incoming MQTT refresh request : %s %s', topic, payload)
             await self.tydom.get_devices_data()
         elif (topic == "/tydom/init"):
             logger.info('Incoming MQTT init request : %s %s', topic, payload)
