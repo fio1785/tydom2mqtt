@@ -1,7 +1,3 @@
-# Dossier local avec mes modifs...
-
-# TYDOM TO MQTT gateway
-
 version: '3'
 
 services:
