@@ -134,10 +134,12 @@ class Boiler:
                     '10' if self.attributes['setpoint'] == 'None' else self.attributes['setpoint'],
                     qos=0)
                 logger.info("Boiler created / updated : %s %s setpoint: %s", self.name, self.id, self.attributes['setpoint'])
-#            if 'hvacMode' in self.attributes:
-#                self.mqtt.mqtt_client.publish(self.config['mode_state_topic'], "heat" if self.attributes['hvacMode'] == "NORMAL" else "off", qos=0)
-#            if 'authorization' in self.attributes:
-#                self.mqtt.mqtt_client.publish(self.config['mode_state_topic'], "off" if self.attributes['authorization'] == "STOP" else "heat", qos=0)
+            if 'hvacMode' in self.attributes:
+                self.mqtt.mqtt_client.publish(self.config['mode_state_topic'], "heat" if self.attributes['hvacMode'] == "NORMAL" else "off", qos=0)
+                logger.info("Boiler created / updated : %s %s hvacMode: %s", self.name, self.id, self.attributes['hvacMode'])
+            if 'authorization' in self.attributes:
+                self.mqtt.mqtt_client.publish(self.config['mode_state_topic'], "off" if self.attributes['authorization'] == "STOP" else "heat", qos=0)
+                logger.info("Boiler created / updated : %s %s authorization: %s", self.name, self.id, self.attributes['authorization'])
             if 'thermicLevel' in self.attributes:
                 self.mqtt.mqtt_client.publish(
                     self.config['mode_state_topic'],
