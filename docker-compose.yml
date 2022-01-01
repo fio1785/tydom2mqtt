@@ -1,3 +1,5 @@
+# file to use for local testing with docker-compose and an .env file
+
 version: '3'
 
 services:
@@ -8,11 +10,11 @@ services:
       - TYDOM_MAC=${TYDOM_MAC}
       - TYDOM_PASSWORD=${TYDOM_PASSWORD}
       - TYDOM_IP=${TYDOM_IP}
-      #- TYDOM_ALARM_PIN = None
-      #- TYDOM_ALARM_HOME_ZONE = 1
-      #- TYDOM_ALARM_NIGHT_ZONE = 2
+      #- TYDOM_ALARM_PIN = ${TYDOM_ALARM_PIN}
+      #- TYDOM_ALARM_HOME_ZONE = ${TYDOM_ALARM_HOME_ZONE}
+      #- TYDOM_ALARM_NIGHT_ZONE = ${TYDOM_ALARM_NIGHT_ZONE}
       - MQTT_HOST=${MQTT_HOST}
       - MQTT_PORT=${MQTT_PORT}
       - MQTT_USER=${MQTT_USER}
       - MQTT_PASSWORD=${MQTT_PASSWORD}
-      #- MQTT_SSL=false
+      #- MQTT_SSL=${MQTT_SSL}
